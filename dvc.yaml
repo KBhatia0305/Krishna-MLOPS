@@ -1,0 +1,30 @@
+stages:
+  data_ingestion:
+    cmd: python src/data_ingestion.py                         #Command needed to execute this stage of the pipeline 
+    deps:                                                     #Dependency (files needed for this stage to run)
+    - src/data_ingestion.py
+    - data/startup_cleaned12.csv
+    params:
+    - data_ingestion.test_size
+    outs:                                                     # Output of the stage 
+    - data/raw
+
+  data_preprocessing:
+    cmd: python src/data_preprocessing.py
+    deps:
+    - data/raw
+    - src/data_preprocessing.py
+    outs:
+    - data/processed
+
+  neighbor_recommender:
+    cmd: python src/recommendation_training.py
+    deps:
+    - data/processed
+    - src/recommendation_training.py
+    params:
+    - recommendation_training.metric
+    - recommendation_training.algorithm
+    outs:
+    - models/investor_recommender.pkl
+  

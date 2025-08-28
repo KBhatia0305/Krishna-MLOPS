@@ -1,0 +1,61 @@
+schema: '2.0'
+stages:
+  data_ingestion:
+    cmd: python src/data_ingestion.py
+    deps:
+    - path: data/startup_cleaned12.csv
+      hash: md5
+      md5: 32109d5e1fdff8a00b630b63ee163520
+      size: 355296
+    - path: src/data_ingestion.py
+      hash: md5
+      md5: 612eff232984ade92c491fdb216f667f
+      size: 2442
+    params:
+      params.yaml:
+        data_ingestion.test_size: 0.25
+    outs:
+    - path: data/raw
+      hash: md5
+      md5: 3f5b94f5b0608aff598cb71d4049fa49.dir
+      size: 380898
+      nfiles: 2
+  data_preprocessing:
+    cmd: python src/data_preprocessing.py
+    deps:
+    - path: data/raw
+      hash: md5
+      md5: 3f5b94f5b0608aff598cb71d4049fa49.dir
+      size: 380898
+      nfiles: 2
+    - path: src/data_preprocessing.py
+      hash: md5
+      md5: 40e9e0e249f1b965ac86b6718d4d1b7c
+      size: 3622
+    outs:
+    - path: data/processed
+      hash: md5
+      md5: 5cbc53927b211e0187dd4fed0a45a013.dir
+      size: 379486
+      nfiles: 2
+  neighbor_recommender:
+    cmd: python src/recommendation_training.py
+    deps:
+    - path: data/processed
+      hash: md5
+      md5: 5cbc53927b211e0187dd4fed0a45a013.dir
+      size: 379486
+      nfiles: 2
+    - path: src/recommendation_training.py
+      hash: md5
+      md5: 1bbf40614e0b7004c184685ed06ff1ab
+      size: 3600
+    params:
+      params.yaml:
+        recommendation_training.algorithm: brute
+        recommendation_training.metric: cosine
+    outs:
+    - path: models/investor_recommender.pkl
+      hash: md5
+      md5: 9169c7406053ca4ff5f3073d5901ed4a
+      size: 115092523

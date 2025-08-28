@@ -1,0 +1,13 @@
+# Used for tuning nobes of entire pipeline in one dashboard
+
+data_ingestion:
+  test_size: 0.25
+
+recommendation_training:
+  metric: cosine
+  algorithm: brute
+
+
+
+  
+
